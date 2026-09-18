@@ -2,29 +2,15 @@ name = "itpark-filtr"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
-# Statik fayllar (public/index.html) — so'rovlari bepul va cheksiz
+# Statik fayllar (public/index.html)
 [assets]
 directory = "./public"
 binding = "ASSETS"
 
-# Bepul tarifni oshib ketmaslik uchun chegara
-[limits]
-subrequests = 10
-
-# ── Reestr bazasi (ixtiyoriy) ────────────────────────────────────────
-# Umumiy reestr kerak bo'lsa:
-#   1) Cloudflare paneli → Storage & Databases → KV → Create namespace
-#      (nomi: itpark-reestr)
-#   2) Ochilgan namespace'ning ID sini nusxalang
-#   3) Quyidagi uch qatordan # belgisini olib tashlang va ID ni qo'ying
-#   4) O'zgarishni GitHub'ga saqlang — Cloudflare o'zi qayta deploy qiladi
+# ── Reestr bazasi (ixtiyoriy) ──
+# Umumiy reestr kerak bo'lsa, KV namespace yaratib,
+# quyidagi uch qatordan # ni olib tashlang va ID ni qo'ying:
 #
 # [[kv_namespaces]]
 # binding = "REESTR"
 # id = "BU_YERGA_KV_ID"
-
-# ── Maxfiy o'zgaruvchilar ─────────────────────────────────────────────
-# AI_API_KEY, TAVILY_API_KEY, SITE_PASSWORD, SESSION_SECRET va
-# AI_BASE_URL, AI_MODEL — bu faylga YOZILMAYDI.
-# Ularni panelda kiritasiz:
-#   Worker → Settings → Variables and Secrets → Add
