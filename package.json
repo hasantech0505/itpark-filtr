@@ -1,0 +1,14 @@
+{
+  "name": "itpark-rezident-filtri",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "IT Park Uzbekistan 589-son qarordagi 30 ta faoliyat turiga kompaniyalarni solishtiruvchi tahlil vositasi (Cloudflare Workers)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

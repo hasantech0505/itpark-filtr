@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IT Park Rezident Filtri</title>
+<meta name="description" content="Kompaniya faoliyatini 589-son qarordagi 30 ta ruxsat etilgan faoliyat turiga solishtiruvchi tahlil vositasi.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  *{box-sizing:border-box}
+  html{color-scheme:light dark}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+
+  :root{
+    --paper:#F1F4F1;
+    --card:#FFFFFF;
+    --sunk:#E8ECE7;
+    --ink:#141B1A;
+    --ink-2:#4A5654;
+    --ink-3:#7B8885;
+    --line:#D9DFD9;
+    --accent:#0F5249;
+    --accent-2:#B8662A;
+    --accent-soft:#E0EBE7;
+    --ok:#2C6B3C; --ok-bg:#E4EFE3; --ok-line:#B7D3B4;
+    --warn:#8A5810; --warn-bg:#F6EAD4; --warn-line:#E0C58C;
+    --no:#8B2F29; --no-bg:#F5E2DF; --no-line:#DFB3AD;
+    --shadow:0 1px 2px rgba(20,27,26,.05), 0 8px 24px -16px rgba(20,27,26,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E1312; --card:#161D1C; --sunk:#111716;
+      --ink:#E7EDEA; --ink-2:#A4B1AE; --ink-3:#74817E; --line:#27312F;
+      --accent:#5CC3AE; --accent-2:#D89257; --accent-soft:#182B28;
+      --ok:#83CB8F; --ok-bg:#15281A; --ok-line:#2C4A32;
+      --warn:#E2B263; --warn-bg:#2B2012; --warn-line:#523E1D;
+      --no:#E68D84; --no-bg:#2D1917; --no-line:#552A26;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1312; --card:#161D1C; --sunk:#111716;
+    --ink:#E7EDEA; --ink-2:#A4B1AE; --ink-3:#74817E; --line:#27312F;
+    --accent:#5CC3AE; --accent-2:#D89257; --accent-soft:#182B28;
+    --ok:#83CB8F; --ok-bg:#15281A; --ok-line:#2C4A32;
+    --warn:#E2B263; --warn-bg:#2B2012; --warn-line:#523E1D;
+    --no:#E68D84; --no-bg:#2D1917; --no-line:#552A26;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding-inline:20px;padding-block:28px 72px;}
+  h1,h2,h3{font-family:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;font-weight:700;text-wrap:balance;margin:0;letter-spacing:-.01em;}
+  h1{font-size:clamp(28px,5.5vw,42px);line-height:1.05;}
+  h2{font-size:19px;}
+  p{margin:0;}
+  .mono{font-family:"IBM Plex Mono", ui-monospace, monospace;font-variant-numeric:tabular-nums;}
+
+  /* header */
+  header{display:flex;flex-direction:column;gap:10px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .lede{color:var(--ink-2);max-width:62ch;}
+
+  /* registry strip */
+  .registry{margin-block:22px 26px;}
+  .registry-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px;}
+  .registry-head span{font-size:12px;color:var(--ink-3);}
+  .chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(34px,1fr));gap:5px;}
+  .chip{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    aspect-ratio:1/1;border:1px solid var(--line);border-radius:3px;
+    background:var(--card);color:var(--ink-3);
+    cursor:pointer;padding:0;transition:background .18s, color .18s, border-color .18s;
+  }
+  .chip:hover{border-color:var(--accent);color:var(--ink);}
+  .chip.hit{background:var(--accent);border-color:var(--accent);color:var(--paper);}
+  .chip.maybe{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn);}
+  :root[data-theme="dark"] .chip.hit, :root:not([data-theme="light"]) .chip.hit{color:#0E1312;}
+
+  /* input */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);}
+  .field{padding:16px;display:flex;flex-direction:column;gap:12px;}
+  .lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);}
+  textarea{
+    width:100%;box-sizing:border-box;min-height:190px;resize:vertical;
+    font-family:inherit;font-size:15px;line-height:1.55;color:var(--ink);
+    background:var(--sunk);border:1px solid var(--line);border-radius:4px;padding:12px 13px;
+  }
+  textarea:focus-visible, button:focus-visible, .chip:focus-visible, summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  button{font-family:inherit;font-size:14px;cursor:pointer;border-radius:4px;border:1px solid transparent;padding:9px 16px;font-weight:600;}
+  .btn-main{background:var(--accent);color:var(--paper);}
+  :root[data-theme="dark"] .btn-main, :root:not([data-theme="light"]) .btn-main{color:#0E1312;}
+  .btn-main:disabled{opacity:.45;cursor:default;}
+  .btn-ghost{background:transparent;color:var(--ink-2);border-color:var(--line);font-weight:500;}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--ink-3);}
+  .hint{font-size:12.5px;color:var(--ink-3);}
+  .sample-note{font-size:12px;color:var(--accent-2);font-weight:500;}
+
+  /* status */
+  .status{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-2);padding:14px 16px;border:1px dashed var(--line);border-radius:6px;background:var(--card);margin-top:18px;}
+  .pulse{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.4s ease-in-out infinite;flex:none;}
+  @keyframes pulse{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+  @media (prefers-reduced-motion: reduce){.pulse{animation:none;opacity:.8}}
+  .err{border-style:solid;border-color:var(--no-line);background:var(--no-bg);color:var(--no);}
+
+  /* verdict */
+  #results{margin-top:26px;display:flex;flex-direction:column;gap:16px;}
+  .verdict{border-radius:6px;border:1px solid var(--line);padding:16px 18px;display:flex;flex-direction:column;gap:8px;}
+  .verdict.v-ok{background:var(--ok-bg);border-color:var(--ok-line);}
+  .verdict.v-warn{background:var(--warn-bg);border-color:var(--warn-line);}
+  .verdict.v-no{background:var(--no-bg);border-color:var(--no-line);}
+  .verdict-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .stamp{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:20px;letter-spacing:-.01em;}
+  .v-ok .stamp{color:var(--ok);} .v-warn .stamp{color:var(--warn);} .v-no .stamp{color:var(--no);}
+  .co-name{font-size:14px;color:var(--ink-2);}
+  .verdict p{color:var(--ink);}
+
+  /* band cards */
+  .band{border:1px solid var(--line);border-radius:6px;background:var(--card);overflow:hidden;box-shadow:var(--shadow);}
+  .band-head{display:flex;gap:12px;padding:14px 16px;align-items:flex-start;}
+  .band-no{
+    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;flex:none;
+    width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+    background:var(--accent-soft);color:var(--accent);border-radius:4px;
+  }
+  .band-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;}
+  .band-title{font-weight:600;line-height:1.35;}
+  .meter{display:flex;align-items:center;gap:9px;}
+  .track{flex:1;height:5px;background:var(--sunk);border-radius:99px;overflow:hidden;min-width:60px;}
+  .fill{height:100%;background:var(--accent);border-radius:99px;}
+  .fill.w{background:var(--warn);} .fill.n{background:var(--no);}
+  .pct{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;color:var(--ink-2);width:42px;text-align:right;}
+  .why{color:var(--ink-2);font-size:14px;}
+  .tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;}
+  .t-ok{background:var(--ok-bg);color:var(--ok);} .t-warn{background:var(--warn-bg);color:var(--warn);} .t-no{background:var(--no-bg);color:var(--no);}
+  details.quote{border-top:1px solid var(--line);background:var(--sunk);}
+  details.quote summary{cursor:pointer;padding:9px 16px;font-size:12.5px;color:var(--ink-2);font-weight:500;}
+  details.quote .qt{padding:0 16px 14px 16px;font-size:13.5px;color:var(--ink-2);border-left:3px solid var(--accent);margin:0 16px 14px 16px;padding-left:12px;}
+
+  /* lists */
+  .block{border:1px solid var(--line);border-radius:6px;background:var(--card);padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .block h2{font-size:15px;}
+  ul.clean{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+  ul.clean li{display:flex;gap:10px;font-size:14px;color:var(--ink-2);}
+  ul.clean li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent-2);margin-top:8px;}
+
+  /* url notice */
+  .urlbox{margin-top:18px;border:1px solid var(--warn-line);background:var(--warn-bg);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:9px;}
+  .urlbox h2{font-size:15px;color:var(--warn);}
+  .urlbox p{font-size:13.5px;color:var(--ink-2);}
+  .cmd{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:9px 11px;color:var(--ink);overflow-x:auto;white-space:pre-wrap;word-break:break-all;}
+
+  /* register */
+  .reg{margin-top:34px;display:flex;flex-direction:column;gap:12px;}
+  .reg-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px;}
+  .reg-head span{font-size:12px;color:var(--ink-3);}
+  .entry{border:1px solid var(--line);border-radius:6px;background:var(--card);overflow:hidden;}
+  .entry>summary{cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:11px;flex-wrap:wrap;}
+  .entry>summary::-webkit-details-marker{display:none}
+  .pill{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:3px;flex:none;}
+  .p-ok{background:var(--ok-bg);color:var(--ok);} .p-warn{background:var(--warn-bg);color:var(--warn);} .p-no{background:var(--no-bg);color:var(--no);}
+  .entry-name{font-weight:600;flex:1;min-width:120px;}
+  .entry-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);}
+  .entry-body{padding:0 16px 16px 16px;display:flex;flex-direction:column;gap:14px;}
+  .src a{color:var(--accent);font-size:12.5px;word-break:break-all;}
+  .empty{border:1px dashed var(--line);border-radius:6px;padding:18px 16px;color:var(--ink-3);font-size:13.5px;background:var(--card);}
+
+  /* reference */
+  .ref{margin-top:34px;}
+  .ref>summary{cursor:pointer;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:17px;padding:12px 0;border-top:1px solid var(--line);}
+  .ref-list{display:flex;flex-direction:column;gap:14px;padding-top:6px;}
+  .ref-item{display:flex;gap:12px;}
+  .ref-no{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;color:var(--accent);flex:none;width:26px;padding-top:2px;}
+  .ref-txt{font-size:13.5px;color:var(--ink-2);}
+  .ref-txt b{color:var(--ink);font-weight:600;display:block;margin-bottom:2px;font-size:14px;}
+  footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3);}
+
+  /* kirish oynasi */
+  .gate{max-width:380px;margin:12vh auto;padding:0 20px;display:flex;flex-direction:column;gap:14px;}
+  .gate .panel{padding:20px;display:flex;flex-direction:column;gap:12px;}
+  .gate input{font-family:inherit;font-size:15px;padding:10px 12px;border-radius:4px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);width:100%;}
+  .gate .err{color:var(--no);font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate" hidden>
+  <div class="eyebrow">VM 589-son qarori · 2-ilova</div>
+  <h1 style="font-size:26px">IT Park Rezident Filtri</h1>
+  <div class="panel">
+    <form class="field" id="loginForm">
+      <label class="lbl" for="parol">Kirish paroli</label>
+      <input type="password" id="parol" autocomplete="current-password" required>
+      <button class="btn-main" type="submit">Kirish</button>
+      <div class="err" id="loginErr" hidden></div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <header>
+    <div class="eyebrow">VM 589-son qarori · 2-ilova</div>
+    <h1>IT Park Rezident Filtri</h1>
+    <p class="lede">Havola, kompaniya nomi yoki tayyor tavsif — qaysi biri boʻlsa ham boʻladi. Havola berilsa, tizim internetdan oʻzi qidiradi, kompaniya faoliyatini toʻplaydi va Vazirlar Mahkamasining 2019-yil 15-iyuldagi 589-son qarori bilan tasdiqlangan 30 ta ruxsat etilgan faoliyat turiga solishtirib, asoslab beradi.</p>
+  </header>
+
+  <section class="registry">
+    <div class="registry-head">
+      <h2>30 ta yoʻnalish</h2>
+      <span id="regNote">Tahlildan soʻng mos bandlar shu yerda yonadi. Raqamni bosing — matni koʻrinadi.</span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div class="panel">
+    <div class="field">
+      <label class="lbl" for="inp">Havola, kompaniya nomi yoki tavsifi</label>
+      <textarea id="inp" spellcheck="false" placeholder="https://www.linkedin.com/company/..."></textarea>
+      <div class="row">
+        <button class="btn-main" id="go">Tahlil qilish</button>
+        <button class="btn-ghost" id="demo">Matnli namuna</button>
+        <button class="btn-ghost" id="clear">Tozalash</button>
+        <span class="sample-note" id="sampleNote">↑ Namuna havola — oʻzingiznikiga almashtiring</span>
+      </div>
+      <p class="hint">Havola yoki nom berilsa — tizim oʻzi qidiradi. Tayyor tavsif berilsa — toʻgʻridan-toʻgʻri tahlil qiladi. Daromad manbai, eksport ulushi va xodimlar soni koʻrsatilgan boʻlsa, xulosa aniqroq chiqadi.</p>
+    </div>
+  </div>
+
+  <div id="status" hidden></div>
+  <div id="results"></div>
+
+  <section class="reg">
+    <div class="reg-head">
+      <h2>Tekshirilganlar reestri</h2>
+      <span id="regCount"></span>
+    </div>
+    <div id="regList"></div>
+  </section>
+
+  <details class="ref">
+    <summary>Toʻliq roʻyxat — 589-son qarorning 2-ilovasi</summary>
+    <div class="ref-list" id="refList"></div>
+  </details>
+
+  <footer>
+    Manba: Vazirlar Mahkamasining 2019-yil 15-iyuldagi 589-son qarori bilan tasdiqlangan Nizomning 2-ilovasi (17-band PQ-59, 11.02.2026 tahririda; 19–22-bandlar VMQ-698, 29.12.2023; 23-band VMQ-303, 29.05.2024).
+    Natija — dastlabki tahlil, rasmiy qaror emas. Yakuniy xulosa IT Park komissiyasi zimmasida.
+  </footer>
+</div>
+
+<script>
+const BANDS = [
+ {n:1,q:"Dasturiy taʼminot ishlab chiqish va sotish",t:"Har qanday platformalar uchun dasturiy taʼminotni, shu jumladan kompyuter oʻyinlarini ishlab chiqish, loyihalash hamda ularni sotish (shu jumladan, dasturiy taʼminotdan foydalanishga ruxsat berish, dasturiy taʼminotning mutlaq huquqini berish (taqdim etish)."},
+ {n:2,q:"Joriy etish, qoʻllab-quvvatlash, oʻrgatish",t:"Dasturiy taʼminotni joriy etish yoki joriy etishda alohida bosqichlarni amalga oshirish, qoʻllab-quvvatlash, xizmat koʻrsatish, shu jumladan, ushbu dasturiy taʼminot bilan ishlash (malaka oshirish)ni oʻrgatish xizmatlari."},
+ {n:3,q:"Dasturiy mahsulotni takomillashtirish va modifikatsiya",t:"Dasturiy mahsulotni takomillashtirish hamda modifikatsiya qilish."},
+ {n:4,q:"Maʼlumotlar bazalarini yaratish va qoʻllab-quvvatlash",t:"Axborot tizimlari va dasturiy taʼminotni ishlab chiqish jarayonida maʼlumotlar bazalarini yaratish, ushbu maʼlumotlar bazalari uchun yozuvlarni belgilangan formatda tayyorlash hamda ularga kirishni taʼminlash, qoʻllab-quvvatlash va xizmat koʻrsatish."},
+ {n:5,q:"Maʼlumotlarni qayta ishlash",t:"Dasturiy taʼminotdan foydalangan holda maʼlumotlarni qayta ishlash faoliyati."},
+ {n:6,q:"Oʻz dasturida reklama joyi / qoʻshimcha daromad",t:"Oʻz dasturiy taʼminotida reklama uchun joy taqdim etish yoki dasturiy taʼminotning xususiyatlaridan foydalangan holda boshqa qoʻshimcha daromad olish."},
+ {n:7,q:"Avtomatlashtirilgan boshqaruv tizimi",t:"Avtomatlashtirilgan boshqaruv tizimini ishlab chiqish va joriy etish."},
+ {n:8,q:"Biznes-tahlil, reinjiniring, IT-konsalting",t:"Yuridik shaxslarning axborot ehtiyojlarini tahlil qilish (tizimli tahlil, biznes-tahlil) hamda biznes-jarayonlarni innovatsiya (reinjiniring) qilish maqsadida axborot tizimlari va dasturiy taʼminotni joriy qilish uchun texnik talablarni ishlab chiqish hamda axborot texnologiyalaridan foydalanish boʻyicha maslahat berish."},
+ {n:9,q:"Axborot tizimlarini audit qilish",t:"Axborot tizimlari va dasturiy taʼminotni ishlab chiqish, joriy qilish va ularni foydalanishga topshirish jarayonida foydalanuvchilarning axborot ehtiyojlari va texnik talablariga muvofiqligini audit qilish."},
+ {n:10,q:"Avtomatlashtirilgan maʼlumot qidirish xizmati",t:"Texnopark rezidenti tomonidan ishlab chiqilgan dasturiy taʼminotda uchinchi shaxs soʻroviga binoan maʼlumotlarni qidirish, tanlash, qayta ishlash va saralash hamda ularga axborot taqdim etish boʻyicha avtomatlashtirilgan xizmat koʻrsatish."},
+ {n:11,q:"Norezidentlarga biznes-jarayonlar autsorsingi (BPO)",t:"Dasturiy taʼminotdan (dasturiy-apparat vositalaridan) foydalangan holda Oʻzbekiston Respublikasi norezidentlariga yordamchi ishlab chiqarish, maʼmuriy va biznes jarayonlarni boshqarish (amalga oshirish) boʻyicha xizmat koʻrsatish (biznes-jarayonlarni autsorsing qilish)."},
+ {n:12,q:"Mikro-, opto-, nanoelektronika mahsulotlarini sotish",t:"Texnopark rezidenti tomonidan ishlab chiqilgan materiallar, texnologiyalar, mikro-, opto- va nanoelektronika, mikroelektrotexnika tizimlari hamda ular bilan mos keluvchi dasturiy taʼminotni sotish."},
+ {n:13,q:"Aloqa, radiolokatsiya, RFID uskunalari",t:"Maʼlumotlarni uzatish tizimlari, texnologiyalar, qurilmalar va radiolokatsiya tizimlari, radionavigatsiya, radioaloqa, radioboshqaruv, radiochastota identifikatsiya uskunalarini ishlab chiqish (tadqiqot oʻtkazish, loyihalash (qurish), test qilish hamda texnik sinovdan oʻtkazish) va bunday ishlanmalar natijalarini ishlab chiqarish yoki ushbu xizmatlarni koʻrsatmasdan turib oʻzlashtirilgan holda sotish xizmatlari."},
+ {n:14,q:"Yuqori texnologiyali qurilma va dasturiy-apparat vositalari",t:"Yuqori texnologiyali qurilmalar va tizimlar, dasturiy-apparat vositalari va ular bilan mos keluvchi dasturiy taʼminotni (sanoat xarakteriga bogʻliq boʻlmagan holda) ishlab chiqish yoki ishlab chiqarishning alohida bosqichlari (tadqiqot oʻtkazish, loyihalash, prototiplash, sinovdan oʻtkazish) hamda ishlab chiqarilgan mahsulotlarni sotish va (yoki) ishlab chiqarish natijalarini oʻzlashtirish boʻyicha xizmat koʻrsatish yoki xizmat koʻrsatmasdan sotish."},
+ {n:15,q:"Axborotni himoya qilish, kriptografiya, ERI",t:"Axborotni texnik va (yoki) kriptografik, shu jumladan, elektron raqamli imzodan foydalanish orqali himoya qilish faoliyati."},
+ {n:16,q:"Internet of Things (IoT) konsepsiyasi",t:"Bir-biri va tashqi muhit bilan oʻzaro muloqot qilish uchun oʻrnatilgan texnologiyalar bilan jihozlangan jismoniy obyektlarning hisoblash-kommunikatsiya tarmogʻi konsepsiyasini ishlab chiqish, joriy qilish va sotish bilan bogʻliq boʻlgan tadbirlar."},
+ {n:17,q:"IT sohasida taʼlim berish",t:"Axborot texnologiyalari sohasida, shu jumladan, Internet jahon axborot tarmogʻi orqali taʼlim berish hamda axborot texnologiyalari sohasidagi taʼlimdan yillik umumiy daromadning 40 foizidan oshmagan holda axborot texnologiyalari sohasida tashkil etiladigan taʼlim doirasida xorijiy tillarni oʻqitish boʻyicha xizmat koʻrsatish faoliyati.",shart:"Xorijiy til oʻqitish — yillik umumiy daromadning 40 foizidan oshmasligi kerak."},
+ {n:18,q:"Internet orqali axborot xizmatlari eksporti",t:"Internet jahon axborot tarmogʻi orqali axborot xizmatlarini eksport qilish."},
+ {n:19,q:"Multimedia va dizayn xizmatlari",t:"Multimedia va dizayn sohasida (veb-dizayn, grafika dizayni, kompyuter oʻyinlari dizayni, vektor grafikasi, 3D-grafika, vizuallashtiruvchi dizayn, interfeys dizayni, texnik dizayn, moushn-dizayn) xizmat koʻrsatish."},
+ {n:20,q:"Multiplikatsiya (animatsiya) mahsulotlari",t:"Dasturiy taʼminotdan foydalangan holda multiplikatsiya mahsulotlarini ishlab chiqarish."},
+ {n:21,q:"Venchur moliyalashtirish va akseleratsiya",t:"Axborot texnologiyalari sohasidagi loyihalarni venchur moliyalashtirish hamda akseleratsiya dasturlarini amalga oshirish faoliyati."},
+ {n:22,q:"Kibersport xizmatlari",t:"Kibersport sohasida xizmat koʻrsatish."},
+ {n:23,q:"Kamida 2 xorijiy davlatda faoliyat + eksport ustunligi",t:"Umumiy xizmatlar hajmida xizmatlar eksporti ulushi mahalliy bozor uchun koʻrsatilgan xizmatlar hajmiga nisbatan yuqori boʻlgan, kamida ikki yoki undan ortiq xorijiy davlatlarda faoliyat koʻrsatuvchi tashkilotlar tomonidan xizmatlar koʻrsatish.",shart:"Kamida 2 xorijiy davlatda faoliyat; eksport ulushi mahalliy bozordan yuqori boʻlishi shart."},
+ {n:24,q:"BPO yoʻnalishi boʻyicha taʼlim",t:"Internet jahon axborot tarmogʻi orqali axborot xizmatlarini (biznes-jarayonlari autsorsingi) eksport qilish faoliyati doirasida, ushbu xizmatdan yillik umumiy daromadining 40 foizidan oshmagan holda, biznes-jarayonlar autsorsingi yoʻnalishi boʻyicha taʼlim faoliyatini amalga oshirish.",shart:"Taʼlimdan tushum yillik umumiy daromadning 40 foizidan oshmasligi kerak."},
+ {n:25,q:"Bilim jarayonlari autsorsingi eksporti (KPO)",t:"Internet jahon axborot tarmogʻi orqali bilim jarayonlari autsorsingi (Knowledge Proccess Outsourcing) xizmatlarini xorijiy davlatlarga eksport qilish."},
+ {n:26,q:"Co-location va maʼlumotlarni qayta ishlash markazi",t:"Maʼlumotlarni saqlash va ishlov berish qurilmalari uchun infratuzilmani ijaraga berish (co-location) xizmatini koʻrsatish va maʼlumotlarni qayta ishlash markazi faoliyati."},
+ {n:27,q:"Ilmiy-tadqiqot va tajriba-konstruktorlik (R&D)",t:"Ilmiy-tadqiqot va tajriba-konstruktorlik faoliyati (R&D)."},
+ {n:28,q:"Aerokosmik texnologiyalar",t:"Aerokosmik texnologiyalar faoliyati."},
+ {n:29,q:"“Raqamli startaplar” dasturi ishtirokchilari",t:"“Raqamli startaplar” dasturi ishtirokchisi boʻlgan startap loyihalar.",shart:"“Raqamli startaplar” dasturida ishtirok etayotgani tasdiqlanishi kerak."},
+ {n:30,q:"Onlayn OAV faoliyati (mezonlar bilan)",t:"Internet jahon axborot tarmogʻida, shu jumladan, ommabop xorijiy ijtimoiy tarmoqlar, messenjerlar va videoxostinglarda veb-sayt koʻrinishidagi, tahririy-noshirlik ishlovidan oʻtgan yangiliklar, tahliliy va maʼrifiy xarakterdagi materiallarni joylashtiradigan ommaviy axborot vositasining faoliyati quyidagi mezonlarga rioya etilgan taqdirda: kamida 1 million nafar obunachi yoki noyob foydalanuvchilarning mavjudligi; kunlik tashrif kamida 50 ming foydalanuvchini tashkil etishi; shtat birligi kamida 25 nafar xodim boʻlishi; oylik daromadi kamida 500 mln soʻmni tashkil etishi; ommaviy axborot vositalari sifatida davlat roʻyxatidan oʻtganligi toʻgʻrisidagi guvohnomaning mavjudligi.",shart:"Beshta mezon: ≥1 mln obunachi; kunlik ≥50 ming tashrif; ≥25 xodim; oylik daromad ≥500 mln soʻm; OAV sifatida davlat roʻyxatidan oʻtganlik."}
+];
+
+const NAMUNA = "https://www.linkedin.com/company/fluxxevents/";
+
+const NAMUNA_MATN = `Kompaniya: "Silk Data Systems" MChJ, Toshkent.
+Faoliyati: logistika kompaniyalari uchun bulutli TMS (Transport Management System) platformasini ishlab chiqadi. Mijozga platformani sozlab beradi, xodimlarini oʻqitadi va oylik texnik qoʻllab-quvvatlash shartnomasi asosida xizmat koʻrsatadi.
+Mijozlar: 14 ta mahalliy tashuvchi, shuningdek Qozogʻiston va Turkiyadagi 3 ta kompaniya.
+Daromad: yillik aylanma 4,2 mlrd soʻm — 70% obuna (SaaS), 20% joriy etish xizmatlari, 10% mijoz xodimlarini oʻqitish kurslari.
+Xodimlar: 26 nafar, shundan 18 nafari dasturchi va QA.
+Qoʻshimcha: platformada yuk egalari uchun reklama banneri joylashtirish xizmati ham bor.`;
+
+const $ = (s) => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+/* ============ kirish (parol) ============ */
+async function kirishTekshir(){
+  try{
+    const r = await fetch("/api/login");
+    const j = await r.json();
+    if (j.kirgan){ ilovaniOch(); return; }
+  }catch(_){ }
+  $("#gate").hidden = false;
+  $("#parol").focus();
+}
+
+$("#loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("#loginErr"); err.hidden = true;
+  try{
+    const r = await fetch("/api/login", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ parol: $("#parol").value })
+    });
+    const j = await r.json();
+    if (j.kirgan){ $("#gate").hidden = true; ilovaniOch(); }
+    else { err.textContent = j.xabar || "Parol notoʻgʻri."; err.hidden = false; }
+  }catch(_){ err.textContent = "Ulanib boʻlmadi."; err.hidden = false; }
+});
+
+function ilovaniOch(){
+  $("#app").hidden = false;
+  boshlash();
+}
+
+/* ============ asosiy ilova ============ */
+let inp, go, clearBtn, statusEl, results, chipsEl;
+const chipEls = {};
+
+function boshlash(){
+  inp = $("#inp"); go = $("#go"); clearBtn = $("#clear");
+  statusEl = $("#status"); results = $("#results"); chipsEl = $("#chips");
+  inp.value = NAMUNA;
+
+  BANDS.forEach((b) => {
+    const c = el("button", "chip"); c.type = "button"; c.textContent = b.n; c.title = b.q;
+    c.addEventListener("click", () => {
+      $(".ref").open = true;
+      document.getElementById("ref-" + b.n).scrollIntoView({behavior:"smooth", block:"center"});
+    });
+    chipEls[b.n] = c; chipsEl.append(c);
+  });
+
+  const refList = $("#refList");
+  BANDS.forEach((b) => {
+    const d = el("div", "ref-item"); d.id = "ref-" + b.n;
+    d.append(el("div", "ref-no", b.n + "."));
+    const tx = el("div", "ref-txt");
+    tx.append(el("b", null, b.q), document.createTextNode(b.t));
+    if (b.shart){
+      const s = el("div", null, "Shart: " + b.shart);
+      s.style.cssText = "margin-top:6px;font-size:12.5px;color:var(--warn)";
+      tx.append(s);
+    }
+    d.append(tx); refList.append(d);
+  });
+
+  go.addEventListener("click", tahlil);
+  clearBtn.addEventListener("click", () => {
+    inp.value = ""; results.textContent = ""; statusEl.hidden = true;
+    Object.values(chipEls).forEach((c) => c.className = "chip");
+    $("#sampleNote").hidden = true; inp.focus();
+  });
+  $("#demo").addEventListener("click", () => {
+    inp.value = NAMUNA_MATN; $("#sampleNote").hidden = true; inp.focus();
+  });
+  inp.addEventListener("input", () => { $("#sampleNote").hidden = (inp.value !== NAMUNA); });
+
+  reestrYuklash();
+}
+
+function setStatus(text, isErr){
+  statusEl.hidden = false;
+  statusEl.className = "status" + (isErr ? " err" : "");
+  statusEl.textContent = "";
+  if (!isErr) statusEl.append(el("div", "pulse"));
+  statusEl.append(document.createTextNode(text));
+}
+
+async function tahlil(){
+  const kirish = inp.value.trim();
+  if (kirish.length < 3){ setStatus("Havola, kompaniya nomi yoki tavsifini kiriting.", true); return; }
+
+  results.textContent = "";
+  Object.values(chipEls).forEach((c) => c.className = "chip");
+  go.disabled = true;
+
+  const t0 = Date.now();
+  const havolami = /^(https?:\/\/|www\.)\S+$/i.test(kirish) || kirish.split(/\s+/).length <= 8;
+  const tick = setInterval(() => {
+    setStatus((havolami ? "Internetdan qidirilmoqda va tahlil qilinmoqda" : "30 ta band boʻyicha solishtirilmoqda")
+      + " — " + Math.round((Date.now() - t0) / 1000) + " soniya");
+  }, 400);
+  setStatus("Boshlanmoqda — 0 soniya");
+
+  try{
+    const r = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kirish })
+    });
+    const j = await r.json();
+    clearInterval(tick);
+    go.disabled = false;
+
+    if (!r.ok){
+      if (j.xato === "kirish_kerak"){ location.reload(); return; }
+      setStatus(j.xabar || "Xatolik yuz berdi.", true);
+      return;
+    }
+    statusEl.hidden = true;
+    chizish(j, true);
+    if (j.qidirildi) await saqlash(j);
+  }catch(e){
+    clearInterval(tick); go.disabled = false;
+    setStatus("Serverga ulanib boʻlmadi. Qayta urinib koʻring.", true);
+  }
+}
+
+/* ============ natijani chizish ============ */
+function holatKlass(h){ return h === "MOS" ? "ok" : (h === "MOS_EMAS" ? "no" : "warn"); }
+function holatNomi(h){ return h === "MOS" ? "MOS KELADI" : (h === "MOS_EMAS" ? "MOS EMAS" : "SHUBHALI"); }
+
+function hisobotYasash(d, chipYoqish){
+  const frag = document.createDocumentFragment();
+  const holat = String(d.umumiy_holat || "SHUBHALI").toUpperCase();
+
+  const v = el("div", "verdict v-" + holatKlass(holat));
+  const top = el("div", "verdict-top");
+  top.append(el("div", "stamp", holatNomi(holat)));
+  if (d.kompaniya) top.append(el("div", "co-name", String(d.kompaniya)));
+  v.append(top);
+  if (d.faoliyat_xulosasi) v.append(el("p", null, String(d.faoliyat_xulosasi)));
+  if (d.umumiy_izoh) v.append(el("p", null, String(d.umumiy_izoh)));
+  frag.append(v);
+
+  const bandlar = Array.isArray(d.bandlar) ? d.bandlar : [];
+  bandlar.forEach((item) => {
+    const n = Number(item.raqam);
+    const def = BANDS.find((b) => b.n === n);
+    if (!def) return;
+    const pct = Math.max(0, Math.min(100, Number(item.ishonch) || 0));
+    const h = String(item.holat || "EHTIMOL").toUpperCase();
+    const sc = holatKlass(h);
+    if (chipYoqish && chipEls[n]) chipEls[n].className = "chip " + (sc === "ok" ? "hit" : "maybe");
+
+    const card = el("div", "band");
+    const head = el("div", "band-head");
+    head.append(el("div", "band-no", String(n)));
+    const body = el("div", "band-body");
+
+    const title = el("div", "band-title");
+    title.append(document.createTextNode(def.q + " "));
+    title.append(el("span", "tag t-" + sc, h === "MOS" ? "mos" : (h === "MOS_EMAS" ? "mos emas" : "ehtimol")));
+    body.append(title);
+
+    const meter = el("div", "meter");
+    const track = el("div", "track");
+    const fill = el("div", "fill" + (sc === "warn" ? " w" : sc === "no" ? " n" : ""));
+    fill.style.width = pct + "%";
+    track.append(fill);
+    meter.append(track, el("div", "pct mono", pct + "%"));
+    body.append(meter);
+
+    if (item.asoslash) body.append(el("div", "why", String(item.asoslash)));
+    if (def.shart) body.append(el("div", "why", "⚠ Shart: " + def.shart));
+
+    head.append(body); card.append(head);
+    const det = el("details", "quote");
+    det.append(el("summary", null, "Qonun matni — " + n + "-band"));
+    det.append(el("div", "qt", def.t));
+    card.append(det);
+    frag.append(card);
+  });
+
+  if (!bandlar.length){
+    const b = el("div", "block");
+    b.append(el("h2", null, "Mos band topilmadi"));
+    b.append(el("p", "why", "Berilgan maʼlumot 589-son qarordagi 30 ta yoʻnalishning birortasiga ishonchli tarzda mos kelmadi."));
+    frag.append(b);
+  }
+
+  const royxat = (nom, arr) => {
+    const x = (Array.isArray(arr) ? arr : []).filter(Boolean);
+    if (!x.length) return;
+    const b = el("div", "block");
+    b.append(el("h2", null, nom));
+    const ul = el("ul", "clean");
+    x.forEach((i) => ul.append(el("li", null, String(i))));
+    b.append(ul); frag.append(b);
+  };
+  royxat("Kompaniyadan soʻralishi kerak", d.yetishmayotgan);
+  royxat("Eʼtibor bering", d.ogohlantirish);
+
+  const srcs = (Array.isArray(d.manbalar) ? d.manbalar : []).filter(Boolean);
+  if (srcs.length){
+    const sd = el("div", "block src");
+    sd.append(el("h2", null, "Manbalar"));
+    srcs.forEach((u) => {
+      const a = document.createElement("a");
+      a.href = String(u); a.textContent = String(u); a.target = "_blank"; a.rel = "noreferrer";
+      sd.append(a, document.createElement("br"));
+    });
+    frag.append(sd);
+  }
+  return frag;
+}
+
+function chizish(d, avtoSaqlandi){
+  results.textContent = "";
+  results.append(hisobotYasash(d, true));
+
+  const bar = el("div", "row");
+  const note = el("span", "hint", "");
+  if (avtoSaqlandi && d.qidirildi){
+    note.textContent = "Natija reestrga saqlanadi.";
+    bar.append(note);
+  } else {
+    const btn = el("button", "btn-ghost", "Reestrga saqlash");
+    btn.addEventListener("click", async () => {
+      btn.disabled = true; note.textContent = "Saqlanmoqda…";
+      const ok = await saqlash(d);
+      note.textContent = ok ? "Reestrga qoʻshildi." : "Saqlab boʻlmadi.";
+      if (!ok) btn.disabled = false;
+    });
+    bar.append(btn, note);
+  }
+  results.append(bar);
+  $("#regNote").textContent = "Yashil — mos, sariq — ehtimol.";
+  results.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+/* ============ reestr ============ */
+const LS = "itpark_reestr";
+
+function lokalOqish(){ try{ return JSON.parse(localStorage.getItem(LS) || "[]"); }catch(_){ return []; } }
+function lokalYozish(a){ try{ localStorage.setItem(LS, JSON.stringify(a.slice(0, 100))); }catch(_){ } }
+
+async function reestrYuklash(){
+  let yozuvlar = null;
+  try{
+    const r = await fetch("/api/reestr");
+    if (r.ok){ yozuvlar = (await r.json()).yozuvlar || []; }
+  }catch(_){ }
+  if (yozuvlar === null) yozuvlar = lokalOqish();
+  reestrChizish(yozuvlar);
+}
+
+async function saqlash(d){
+  const y = {
+    kompaniya: String(d.kompaniya || "Nomaʼlum"),
+    havola: d.havola || "",
+    sana: d.sana || new Date().toISOString().slice(0, 10),
+    vaqt: d.vaqt || new Date().toISOString(),
+    umumiy_holat: d.umumiy_holat || "SHUBHALI",
+    umumiy_izoh: d.umumiy_izoh || "",
+    faoliyat_xulosasi: d.faoliyat_xulosasi || "",
+    bandlar: Array.isArray(d.bandlar) ? d.bandlar : [],
+    yetishmayotgan: Array.isArray(d.yetishmayotgan) ? d.yetishmayotgan : [],
+    ogohlantirish: Array.isArray(d.ogohlantirish) ? d.ogohlantirish : [],
+    manbalar: Array.isArray(d.manbalar) ? d.manbalar : []
+  };
+  let ok = false;
+  try{
+    const r = await fetch("/api/reestr", {
+      method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(y)
+    });
+    ok = r.ok;
+  }catch(_){ }
+  if (!ok){ const a = lokalOqish(); a.unshift(y); lokalYozish(a); }
+  await reestrYuklash();
+  return true;
+}
+
+function reestrChizish(rows){
+  const list = $("#regList"), count = $("#regCount");
+  list.textContent = "";
+  if (!rows.length){
+    count.textContent = "";
+    list.append(el("div", "empty", "Hozircha boʻsh. Havola tashlab tahlil qilsangiz, natijalar shu yerda toʻplanadi."));
+    return;
+  }
+  count.textContent = rows.length + " ta yozuv";
+  rows.forEach((r) => {
+    const d = el("details", "entry");
+    const s = el("summary");
+    const holat = String(r.umumiy_holat || "SHUBHALI").toUpperCase();
+    s.append(el("span", "pill p-" + holatKlass(holat), holatNomi(holat)));
+    s.append(el("span", "entry-name", String(r.kompaniya || "Nomaʼlum")));
+    const nums = (Array.isArray(r.bandlar) ? r.bandlar : []).map((b) => b.raqam).filter(Boolean);
+    s.append(el("span", "entry-meta", (nums.length ? nums.join(", ") + "-band · " : "") + String(r.sana || "")));
+    d.append(s);
+    const body = el("div", "entry-body");
+    body.append(hisobotYasash(r, false));
+    d.append(body);
+    list.append(d);
+  });
+}
+
+kirishTekshir();
+</script>
+</body>
+</html>
